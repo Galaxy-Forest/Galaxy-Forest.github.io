@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body, #canvas {
+            width: 100vw;
+            height: 100vh;
+        }
+        #canvas{
+            position:absolute;
+        }
+        a{
+            color: white;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+        #div1{
+            height: 967px;
+            background: url(img/博客壁纸.jpg);
+            /* background: no-repeat; */
+             background-size:cover ;
+        }
+
+        #DHTX{
+            transition: all 1s linear;
+        }
+    </style>
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_3361327_0dla8zu5jtna.css">
+   
+</head>
+<body id="body">
+    <canvas id="canvas"></canvas>
+    <div id="div1" onclick="1()">
+          <header id="header-nav">
+        <nav>
+            <ul>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe601;</i>
+                        首页
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe65b;</i>
+                        标签
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe60d;</i>
+                        分类
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe607;</i>
+                        关于
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe606;</i>
+                        留言板
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe8ba;</i>
+                        相册
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="iconfont">&#xe60e;</i>
+                        笔记
+                    </a>
+                </li>
+                <li style="width: auto;">
+                    <a href="javascprit" style="padding: 0px;">
+                        <i class="iconfont" style="font-size: 23px; position: absolute; top: 1px;">&#xe644;</i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div id="DonHua">
+           <h1>Smile Life</h2>
+           <span id="DHTX">从来没有真正的绝境，只有心灵的迷途</span>
+            <div>
+                <a href="">
+                    <i class="iconfont">&#xeb95;</i>
+                    START
+                </a>
+                <a href="">
+                    <i class="iconfont">&#xe885;</i>
+                    GITHUB
+                </a>
+            </div>
+            <div>
+                <a href="">
+                    <i class="iconfont">&#xe885;</i>
+                </a>
+                <a href="">
+                    <i class="iconfont">&#xe908;</i>
+                </a>
+                <a href="">
+                    <i class="iconfont">&#xe882;</i>
+                </a>
+                <a href="">
+                    <i class="iconfont">&#xe602;</i>
+                </a>
+            </div>
+    </div>
+    </div>
+
+    <script>
+        // 屏幕宽高
+        const windowW = document.body.offsetWidth
+        const windowH = document.body.offsetHeight
+
+        const canvasDom = document.getElementById('canvas')
+        canvasDom.width = windowW
+        canvasDom.height = windowH
+        const ctx = canvasDom.getContext('2d')
+
+        // 花瓣 - 数组
+        const petalsArr = []
+
+        
+        // 生成范围随机数
+        const random = (start, end) => {
+            return Math.random() * (end - start) + start
+        }
+
+        // 添加 花瓣
+        const addPetals = () => {
+            const width = random(36.5, 5.3)
+
+            petalsArr.push(new Petals({
+                width: width,
+                height: 186 * width / 365,
+                imgSrc: 'img/petals.png',
+
+                speedX: random(0.1, 1),
+                speedY: random(0.5, 2.5),
+                x: random(0, windowW),
+                y: 0
+            }))
+        }
+        
+
+        // render 
+        function render() {
+            // 清除页面
+            ctx.clearRect(0, 0, windowW, windowH)
+
+            // 填充背景色
+            ctx.fillStyle="transparent";
+            ctx.fillRect(0, 0, windowW, windowH);
+
+            petalsArr.forEach((petal, index) => {
+                if(petal.y > windowH) {
+                    petalsArr.splice(index, 1)
+                } else {
+                    petal.draw(index)
+                }
+            })
+            requestAnimationFrame(render)
+        }
+
+
+        // 花瓣 - 类
+        class Petals {
+            constructor(petal) {
+                // ---- 花瓣数据 ----
+                // 宽度
+                this.width = petal.width
+                // 高度
+                this.height = petal.height
+                // 图片
+                this.img = new Image()
+                this.img.src =  petal.imgSrc
+
+                // ---- 动画配置 ----
+                // 横向运动速度
+                this.speedX = petal.speedX
+                // 下落速度
+                this.speedY = petal.speedY
+                // x轴距离
+                this.x = petal.x
+                // y轴j距离
+                this.y = petal.y
+
+                // 是否可切换左右切换方式
+                this.canSwitch = true
+                // 左右移动方向 true - 右， false - 左
+                this.switch = true
+                // 单方向执行次数 
+                this.switchNum = 0
+            }
+
+            // 花瓣运动
+            draw() {
+                if(this.switchNum > 100) this.canSwitch = true
+                if(this.canSwitch) {
+                    this.canSwitch = false
+                    this.switchNum = 0
+                    this.switch = Math.random() > 0.5
+                }
+                if(this.switch) {
+                    this.x += this.speedX
+                } else {
+                    this.x -= this.speedX
+                }
+                this.y += this.speedY
+                this.switchNum ++ 
+                ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+            }
+        }
+
+
+        
+        // 调用函数
+        addPetals()
+        setInterval(addPetals, 100)
+        render()
+
+
+
+       
+    </script>
+     <script src="js/dazi.js"></script>
+</body>
+</html>

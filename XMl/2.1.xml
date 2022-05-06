@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<students>
+	<student name="张三" 学号=""1>
+		<语文>100</语文>
+		<数学>90</数学>
+	</student>
+	<student name="张二" 学号=""1>
+		<语文>100</语文>
+		<数学>90</数学>
+	</student>
+</students>
